@@ -53,6 +53,8 @@ public class PlayerController : MonoBehaviour
         speedMultiplier *= dashSpeedMultiplier;
         tr.emitting = true;
 
+        Debug.Log("Dash Start");
+
         yield return new WaitForSeconds(dashTime);
 
         speedMultiplier = originalSpeed;
@@ -60,6 +62,8 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
 
         yield return new WaitForSeconds(dashCooldown);
+
+        Debug.Log("Dash End");
 
         canDash = true;
         

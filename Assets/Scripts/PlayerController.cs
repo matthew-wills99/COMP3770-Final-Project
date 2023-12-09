@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     [SerializeField] private TrailRenderer tr;
 
     // Adjust the speed of the player
@@ -70,6 +71,11 @@ public class PlayerController : MonoBehaviour
         
     }
 
+=======
+    public float speedMultiplier = 0.5f; // Adjust the speed of the player
+    float xDir;
+    float zDir;
+>>>>>>> parent of ddf606e (Dash movement, refactoring & commenting)
 =======
     public float speedMultiplier = 0.5f; // Adjust the speed of the player
     float xDir;

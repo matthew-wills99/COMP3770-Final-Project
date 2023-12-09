@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+<<<<<<< HEAD
     [SerializeField] private TrailRenderer tr;
 
     // Adjust the speed of the player
@@ -69,33 +70,18 @@ public class PlayerController : MonoBehaviour
         
     }
 
+=======
+    public float speedMultiplier = 0.5f; // Adjust the speed of the player
+    float xDir;
+    float zDir;
+>>>>>>> parent of ddf606e (Dash movement, refactoring & commenting)
     void FixedUpdate()
     {
-        // Call move function every cycle
-        Move();
-
-        // Check if the player is dashing
-        if(isDashing)
-        {
-            // Dash-related physics here
-            return;
-        }
-    }
-    
-    void Move()
-    {
-        /*
-        Input.GetAxis() returns a value between -1 and 1 (?)
-        Horizontal corresponds to left and right arrow keys, as well as 'a' and 'd'
-        Vertical corresponds to up and down arrow keys, as well as 'w' and 's'
-        */
         xDir = Input.GetAxis("Horizontal");
         zDir = Input.GetAxis("Vertical");
 
-        // Create a new V3 of the player input for the update cycle and scale it with the speed multiplier
         Vector3 moveDir = new Vector3(xDir, 0f, zDir) * speedMultiplier;
 
-        // Adjust player position according to the player input
         transform.position += moveDir;
     }
 }

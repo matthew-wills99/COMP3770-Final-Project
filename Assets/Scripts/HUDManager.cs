@@ -30,9 +30,9 @@ public class HUDManager : MonoBehaviour
 
     void updateWeapon()
     {
-        if(weaponLabel.text != playerController.GetWeapon())
+        if(weaponLabel.text != playerController.GetWeapon().ToString())
         {
-            weaponLabel.text = playerController.GetWeapon();
+            weaponLabel.text = playerController.GetWeapon().ToString();
         }
     }
 }

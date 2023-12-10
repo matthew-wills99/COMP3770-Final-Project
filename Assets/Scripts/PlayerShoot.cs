@@ -8,55 +8,19 @@ public class PlayerShoot : MonoBehaviour
     [Header("References")]
     public GameObject bullet;
     public Transform cursor;
-    public Transform hands;
     public PlayerController playerController;
-    Vector3 requiredHitPoint;
-    LayerMask playerLayer;
+    public CameraFollowPlayer cameraFollowPlayer;
+    private Vector3 mousePos;
+    private Vector3 rotation;
+    public Vector3 offset;
+    private float rotZ;
 
-    /// <summary>
-    /// https://www.youtube.com/watch?v=c3842pGVWvU
-    /// </summary>
-    void NewPosition()
+    public Vector3 screenPos;
+    public Vector3 worldPos;
+
+    void Start()
     {
-        Vector3 mouse = Input.mousePosition;
-        Ray castPoint = Camera.main.ScreenPointToRay(mouse);
-        RaycastHit hit;
-        if(Physics.Raycast(castPoint, out hit, Mathf.Infinity, ~playerLayer))
-        {
-            Vector3 playerHeight = new Vector3(hit.point.x, playerController.GetPlayerTransform().position.y, hit.point.z);
-
-            Vector3 hitPoint = new Vector3(hit.point.x, hit.point.y, hit.point.z);
-
-            float length = Vector3.Distance(playerHeight, hitPoint);
-
-            var deg = 30;
-            var rad = deg * Mathf.Deg2Rad;
-
-            float hypotenuse = length / Mathf.Sin(rad);
-
-            float distanceFromCam = hit.distance;
-
-            if(playerController.GetPlayerTransform().position.y > hit.point.y)
-            {
-                requiredHitPoint = castPoint.GetPoint(distanceFromCam - hypotenuse);
-            }
-            else if(playerController.GetPlayerTransform().position.y < hit.point.y)
-            {
-                requiredHitPoint = castPoint.GetPoint(distanceFromCam + hypotenuse);
-            }
-            else
-            {
-                requiredHitPoint = castPoint.GetPoint(distanceFromCam);
-            }
-            
-            requiredHitPoint.y = 1; // Lock the y value of the cursor to sit just above the floor
-            cursor.transform.position = requiredHitPoint; // Move the cursor to where the casted ray hits the floor
-        }
-    }
-
-    void RotateHands()
-    {
-        transform.LookAt(cursor.transform.position);
+        offset = Vector3.zero;
     }
 
     private void Awake()
@@ -66,15 +30,39 @@ public class PlayerShoot : MonoBehaviour
 
     void Update()
     {
-        NewPosition();
-        RotateHands();
+        /*mousePos = Input.mousePosition;
+        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        mousePos += offset;
+        cursor.position = mousePos;*/
+
+        
+        screenPos = Input.mousePosition;
+        screenPos.z = Camera.main.nearClipPlane + 10;
+        worldPos = Camera.main.ScreenToWorldPoint(screenPos) /*commentthisout+ cameraFollowPlayer.GetCameraPos()*/;
+        worldPos += offset;
+        worldPos.y = 0;
+
+        cursor.position = worldPos;
+
+
+
+
+        /*mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        rotation = mousePos - transform.position;
+        float angle = Mathf.Atan2(rotation.x, rotation.z)*Mathf.Rad2Deg;
+
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);*/
+
+        /*
+        rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, rotZ, 0);*/
     }
 
     private void Shoot()
     {
-        GameObject bulletObj = Instantiate(bullet, hands.transform.position, hands.transform.rotation);
+        GameObject bulletObj = Instantiate(bullet, playerController.GetHandsPos(), Quaternion.identity);
 
-        Vector3 shootDir = (cursor.transform.position - hands.transform.position).normalized;
+        Vector3 shootDir = playerController.GetPlayerTransform().transform.forward;
         bulletObj.transform.GetComponent<Bullet>().InitBullet(shootDir);
     }
 }

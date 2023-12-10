@@ -7,9 +7,12 @@ public class PlayerShoot : MonoBehaviour
 {
     [Header("References")]
     public GameObject bullet;
+    public Transform rotatePoint;
     public Transform cursor;
     public Transform hands;
     public PlayerController playerController;
+
+    public float bulletSpeed = 10f;
     Vector3 requiredHitPoint;
     LayerMask playerLayer;
 
@@ -56,7 +59,7 @@ public class PlayerShoot : MonoBehaviour
 
     void RotateHands()
     {
-        transform.LookAt(cursor.transform.position);
+        rotatePoint.transform.LookAt(cursor.transform.position);
     }
 
     private void Awake()
@@ -75,6 +78,6 @@ public class PlayerShoot : MonoBehaviour
         GameObject bulletObj = Instantiate(bullet, hands.transform.position, hands.transform.rotation);
 
         Vector3 shootDir = (cursor.transform.position - hands.transform.position).normalized;
-        bulletObj.transform.GetComponent<Bullet>().InitBullet(shootDir);
+        bulletObj.transform.GetComponent<Bullet>().InitBullet(shootDir, bulletSpeed);
     }
 }

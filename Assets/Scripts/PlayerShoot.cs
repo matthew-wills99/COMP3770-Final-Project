@@ -12,10 +12,16 @@ public class PlayerShoot : MonoBehaviour
     public CameraFollowPlayer cameraFollowPlayer;
     private Vector3 mousePos;
     private Vector3 rotation;
+    public Vector3 offset;
     private float rotZ;
 
     public Vector3 screenPos;
     public Vector3 worldPos;
+
+    void Start()
+    {
+        offset = Vector3.zero;
+    }
 
     private void Awake()
     {
@@ -24,10 +30,17 @@ public class PlayerShoot : MonoBehaviour
 
     void Update()
     {
+        /*mousePos = Input.mousePosition;
+        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        mousePos += offset;
+        cursor.position = mousePos;*/
+
+        
         screenPos = Input.mousePosition;
         screenPos.z = Camera.main.nearClipPlane + 10;
-        worldPos = Camera.main.ScreenToWorldPoint(screenPos) /*+ cameraFollowPlayer.GetCameraPos()*/;
-        worldPos = new Vector3(worldPos.x, worldPos.y, worldPos.z);
+        worldPos = Camera.main.ScreenToWorldPoint(screenPos) /*commentthisout+ cameraFollowPlayer.GetCameraPos()*/;
+        worldPos += offset;
+        worldPos.y = 0;
 
         cursor.position = worldPos;
 

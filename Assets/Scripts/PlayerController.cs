@@ -7,10 +7,11 @@ public class PlayerController : MonoBehaviour
 {
 
     [Header("References")]
-    public Transform blinkLocation; // The transform that indicates where the player will blink to
-    public Transform playerObject; // The capsule representing the player
-    public Rigidbody rb; // The rigidbody attached to the capsule
-    public TrailRenderer tr; // The trail renderer attached to the capsule
+    public Transform blinkLocation;
+    public Transform handsLocation;
+    public Transform playerObject;
+    public Rigidbody rb;
+    public TrailRenderer tr;
 
     [Header("Stats")]
     public float health = 100f; // Player health
@@ -21,17 +22,15 @@ public class PlayerController : MonoBehaviour
     [Header("Blink")]
     public float blinkDistance = 5f; // Adjust how far the player blinks
     public float blinkCooldown = 5f; // Adjust the cooldown of the blink ability in seconds
-    private bool canBlink = true; // Keep track of if the player can blink or not
+    private bool canBlink = true;
 
-    //private bool canAttack = true; // Not yet used
+    private bool canAttack = true;
 
     public float handsDistance = 1f; // Adjust how far the player's hands are
 
-    // Weapon enumerator to keep track of which weapon is selected
-    public enum Weapon {GrenadeLauncher, Railgun, Sword};
+    enum Weapon {GrenadeLauncher, Railgun, Sword};
     Weapon selectedWeapon = new Weapon();
 
-    // Shoot event
     public delegate void ShootAction();
     public static event ShootAction onShoot;
 
@@ -39,15 +38,13 @@ public class PlayerController : MonoBehaviour
     
     void Start()
     {
-        // Default weapon
         selectedWeapon = Weapon.GrenadeLauncher;
 
-        // Init direction of player
         dir = Vector3.zero;
 
-        // Reset rotation because unity sucks?
         rb.centerOfMass = Vector3.zero;
         rb.inertiaTensorRotation = Quaternion.identity;
+
     }
 
     void Update()
@@ -66,10 +63,8 @@ public class PlayerController : MonoBehaviour
             CycleWeapons();
         }
 
-        // Player shoots
         if(Input.GetMouseButtonDown(0))
         {
-            // Start shoot event if it exists
             if(onShoot != null)
             {
                 onShoot();
@@ -81,9 +76,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Cycle through each weapon in the weapons enumerator.
-    /// </summary>
     private void CycleWeapons()
     {
         if(selectedWeapon == Weapon.GrenadeLauncher)
@@ -100,10 +92,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Blinks to the position of the BlinkLocation object.
-    /// Uses the trail renderer to visualize.
-    /// </summary>
     private IEnumerator Blink()
     {
         Debug.Log("Blink");
@@ -120,10 +108,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Blink ready.");
     }
 
-    /// <summary>
-    /// Calculate the direction of travel based on user input,
-    /// then moves the player accordingly and rotates towards the direction of travel.
-    /// </summary>
     private void Move()
     {
         dir.x = Input.GetAxis("Horizontal");
@@ -132,30 +116,20 @@ public class PlayerController : MonoBehaviour
 
         playerObject.transform.position += speedMultiplier * Time.deltaTime * dir;
     
-        // Won't be zero if the player has moved
         if(dir != Vector3.zero)
         {
-            // Rotate the player such that the forward direction of the player is the direction of travel
             playerObject.transform.forward = dir;
         }
     }
-
-    //-------------------------------------------------------------------------------------
-    //    ______     __  __                    ___        _____      __  __                
-    //   / ____/__  / /_/ /____  __________   ( _ )      / ___/___  / /_/ /____  __________
-    //  / / __/ _ \/ __/ __/ _ \/ ___/ ___/  / __ \/|    \__ \/ _ \/ __/ __/ _ \/ ___/ ___/
-    // / /_/ /  __/ /_/ /_/  __/ /  (__  )  / /_/  <    ___/ /  __/ /_/ /_/  __/ /  (__  ) 
-    // \____/\___/\__/\__/\___/_/  /____/   \____/\/   /____/\___/\__/\__/\___/_/  /____/                                                                                                                                                                                                                                                                                                                                                                                                                   
-    //-------------------------------------------------------------------------------------
 
     public float GetHealth()
     {
         return health;
     }
 
-    public Weapon GetWeapon()
+    public string GetWeapon()
     {
-        return selectedWeapon;
+        return selectedWeapon.ToString();
     }
 
     public Vector3 GetPos()
@@ -166,6 +140,11 @@ public class PlayerController : MonoBehaviour
     public Vector3 GetBlinkPos()
     {
         return blinkLocation.position;
+    }
+
+    public Vector3 GetHandsPos()
+    {
+        return handsLocation.transform.position;
     }
 
     public Transform GetPlayerTransform()

@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     [Header("References")]
     public Transform blinkLocation; // The transform that indicates where the player will blink to
     public Transform playerObject; // The capsule representing the player
-    public Rigidbody rb; // The rigidbody attached to the capsule
+    //public Rigidbody rb; // The rigidbody attached to the capsule
     public TrailRenderer tr; // The trail renderer attached to the capsule
 
     [Header("Stats")]
@@ -46,16 +46,16 @@ public class PlayerController : MonoBehaviour
         dir = Vector3.zero;
 
         // Reset rotation because unity sucks?
-        rb.centerOfMass = Vector3.zero;
-        rb.inertiaTensorRotation = Quaternion.identity;
+        //rb.centerOfMass = Vector3.zero;
+        //rb.inertiaTensorRotation = Quaternion.identity;
     }
 
     void Update()
     {
-        if (DialogueManager.GetInstance().dialogueIsPlaying)
+        /*if (DialogueManager.GetInstance().dialogueIsPlaying)
         {
             return;
-        }
+        }*/
         Move();
 
         // Player blinks

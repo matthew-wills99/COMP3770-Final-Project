@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -14,7 +15,14 @@ public class Bullet : MonoBehaviour
         this.shootDir = shootDir;
         this.speed = speed;
         this.sender = sender;
-        Destroy(gameObject, lifespan);
+        try 
+        {
+            Destroy(gameObject, lifespan);
+        }
+        catch (Exception)
+        {
+            // tried to destroy bullet that was already destroyed because it hit something
+        }
     }
 
     public void OnTriggerEnter(Collider other)
@@ -22,12 +30,25 @@ public class Bullet : MonoBehaviour
         if(other.tag == "enemy" && sender != "enemy")
         {
             other.GetComponentInParent<TurretController>().Hit();
+            Destroy(gameObject);
         }
 
         if(other.tag == "Player" && sender != "Player")
         {
             other.GetComponentInParent<PlayerController>().Hit();
+            Destroy(gameObject);
         }
+
+        if(other.tag == "Monster")
+        {
+            other.GetComponent<Monster>().TakeDamage();
+            Debug.Log("Monster hit");
+        }
+
+        if(other.tag != "bullet")
+        {
+            Destroy(gameObject);
+        }        
     }
     
     void MoveBullet()

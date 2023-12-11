@@ -1,166 +1,56 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
 
-public class monster : MonoBehaviour
+public class Monster : MonoBehaviour
 {
-    private Transform bosstarget;   // ÉèÖÃ×·×ÙÄ¿±êµÄÎ»ÖÃ
-    public float bossAIMaxHP;  // ×î´óÉúÃüÖµ
-    public Slider bossAISli;   // ÑªÌõ
-    public float bossAICurrentHP;  // µ±Ç°ÉúÃüÖµ
-    public float bossguaiwujingyan;
-    new private Rigidbody2D rigidbody;
-
-    public float dis;  // ¹ÖÎïÓëÄ¿±êµÄ¾àÀë
-    private Animator bossanimator;
-    public float speed;
-    private float speed1;
-    // public GameObject panl;
-    public float guaiwugongji;  // ¹ÖÎï¹¥»÷Á¦
-    public Collider2D coll;  // ½ÇÉ«Åö×²Æ÷
-    public LayerMask ground;  // µØÃæÍ¼²ã
-    private bool shoushang;  // ÊÇ·ñÊÜÉË
-    private float intt;
-
+    public float HP = 20;
+    NavMeshAgent agent;
+    Animator ani;
+    float juli;
+    public Transform player;
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
-        bossanimator = GetComponent<Animator>();  // »ñÈ¡¶¯»­×é¼ş
-        bosstarget = GameObject.FindWithTag("Player").transform;  // »ñÈ¡ÓÎÏ·ÖĞÖ÷½ÇµÄÎ»ÖÃ£¬ÔÚÎÒµÄ¹¤³ÌÀïÃæÖ÷½ÇµÄ±êÇ©ÊÇPlayer
-        bossAICurrentHP = bossAIMaxHP;  // ÉúÃüÖµ³õÊ¼»¯
-
-        bossanimator.Play("boss");  // ²¥·Åboss¶¯»­
+        agent= GetComponent<NavMeshAgent>();
+        ani= GetComponent<Animator>();
     }
 
+    // Update is called once per frame
     void Update()
+
     {
-        bossShowHPSlider();  // ¸üĞÂÑªÌõÏÔÊ¾
-        if (shoushang == true)
+        if (HP<=0)//è¡€é‡0æ—¶ï¼Œæ’­æ”¾æ­»äº¡åŠ¨ç”»
         {
-            bossmoveinging();  // ÊÜÉËºóµÄÒÆ¶¯
+            agent.enabled = false;
+            ani.SetBool("Die", true);
         }
-        if (shoushang == false)
+
+
+        // ä¸€å®šä½ç½®å†…è·Ÿéšè¿‡å»
+        if (Vector3.Distance(transform.position, player.position) >= 2.5f && Vector3.Distance(transform.position, player.position) <= 10f)
         {
-            bossmoveing();  // Õı³£ÒÆ¶¯
+            agent.enabled = true;
+            agent.destination = player.position;
+            ani.SetBool("Run", true);
         }
-        if (!coll.IsTouchingLayers(ground))  // ÊÇ·ñÕ¾ÔÚµØÃæÉÏ
+        else//è¶…è¿‡èŒƒå›´ åœæ­¢è·Ÿéšï¼Œå¹¶æ’­æ”¾å¾…æœºåŠ¨ç”»
         {
-            rigidbody.gravityScale = 50f;  // Ê¹¹ÖÎïÊÜÖØÁ¦Ó°Ïì
+            transform.LookAt(player.position);  
+            agent.enabled = false;
+            ani.SetBool("Run", false);
         }
-        else
+        //é è¿‘ç›®æ ‡æ—¶ï¼Œåœæ­¢å¯¼èˆªï¼Œæ’­æ”¾æ”»å‡»åŠ¨ç”»
+        if (Vector3.Distance(transform.position, player.position) <= 2.5f) 
         {
-            rigidbody.gravityScale = 1f;  // È¡ÏûÖØÁ¦Ó°Ïì
-            //yÖá¸ÕÌåÊÜÁ¦ÌøÔ¾
+           
+           // ani.SetBool("Run", false);
+            ani.SetTrigger("Att");
         }
+
     }
-
-    public void bossmoveinging()
+    public void TakeDamage(float damage=5f) //æ”¹æ–¹æ³• æ¯æ¬¡è°ƒç”¨å‡20è¡€é‡
     {
-        if (dis <= 300 && dis >= 1)  // Èç¹ûÓëÄ¿±êµÄ¾àÀëÔÚ1µ½300Ö®¼ä
-        {
-            if (intt < 0)
-            {
-                rigidbody.velocity = new Vector2(speed, speed1);  // ÏòÓÒÒÆ¶¯
-                bossanimator.Play("bosswalkright");  // ²¥·ÅÏòÓÒÒÆ¶¯µÄ¶¯»­
-            }
-            if (intt > 0)
-            {
-                rigidbody.velocity = new Vector2(-speed, speed1);  // Ïò×óÒÆ¶¯
-                bossanimator.Play("bosswalkleft");  // ²¥·ÅÏò×óÒÆ¶¯µÄ¶¯»­
-            }
-        }
-    }
-
-    public void bossmoveing()
-    {
-        dis = (transform.position - bosstarget.position).sqrMagnitude;  // »ñÈ¡ÓëÄ¿±êµÄ¾àÀëµÄÆ½·½
-        intt = transform.position.x - bosstarget.position.x;  // »ñÈ¡ÓëÄ¿±êµÄx×ø±ê²îÖµ
-
-        if (dis >= 30)  // Èç¹ûÓëÄ¿±êµÄ¾àÀë´óÓÚµÈÓÚ30
-        {
-            bossanimator.Play("boss");  // ²¥·Å¾²Ö¹¶¯»­
-            rigidbody.velocity = new Vector2(speed * 0, speed1);  // Í£Ö¹ÒÆ¶¯
-        }
-
-        if (dis <= 30 && dis >= 3)  // Èç¹ûÓëÄ¿±êµÄ¾àÀëÔÚ3µ½30Ö®¼ä
-        {
-            if (intt < 0)
-            {
-                rigidbody.velocity = new Vector2(speed, speed1);  // ÏòÓÒÒÆ¶¯
-                bossanimator.Play("bosswalkright");  // ²¥·ÅÏòÓÒÒÆ¶¯µÄ¶¯»­
-            }
-            if (intt > 0)
-            {
-                rigidbody.velocity = new Vector2(-speed, speed1);  // Ïò×óÒÆ¶¯
-                bossanimator.Play("bosswalkleft");  // ²¥·ÅÏò×óÒÆ¶¯µÄ¶¯»­
-            }
-        }
-
-        if (dis <= 3)  // Èç¹ûÓëÄ¿±êµÄ¾àÀëĞ¡ÓÚµÈÓÚ3
-        {
-            if (intt < 0)
-            {
-                rigidbody.velocity = new Vector2(speed * 0, speed1);  // Í£Ö¹ÒÆ¶¯
-                bossanimator.Play("bossattackright");  // ²¥·ÅÏòÓÒ¹¥»÷µÄ¶¯»­
-            }
-            if (intt > 0)
-            {
-                rigidbody.velocity = new Vector2(speed * 0, speed1);  // Í£Ö¹ÒÆ¶¯
-                bossanimator.Play("bossattackleft");  // ²¥·ÅÏò×ó¹¥»÷µÄ¶¯»­
-            }
-        }
-    }
-
-    public void TakeDamage(float damage)//¼õÑª
-    {
-        bossAICurrentHP -= damage;  // ¿Û³ıÉúÃüÖµ
-        shoushang = true;  // ÉèÖÃÊÜÉË×´Ì¬Îªtrue
-        Invoke("shoushangfalse", 3f);  // ¾­¹ı3ÃëºóÈ¡ÏûÊÜÉË×´Ì¬
-        if (bossAICurrentHP <= 0)  // Èç¹ûÉúÃüÖµĞ¡ÓÚµÈÓÚ0
-        {
-            bossAICurrentHP = 0;  // ÉúÃüÖµÖÃÎª0
-            //animator.SetBool("AIisdeath", true);
-            //nisile.SetActive(true);
-            //this.transform.tag = "siwang";
-            bossAIxiaohui();  // µ÷ÓÃ¹ÖÎïÏûÊ§µÄº¯Êı
-        }
-    }
-
-    public void shoushangfalse()  // È¡ÏûÊÜÉË×´Ì¬
-    {
-        if (dis >= 30)
-        {
-            shoushang = false;
-        }
-    }
-
-    public void bossShowHPSlider()  // ¸üĞÂÑªÌõÏÔÊ¾
-    {
-        bossAISli.value = bossAICurrentHP;
-    }
-        //¹ÖÎïÑªÃ»ÁËµÄÇé¿öµ÷ÓÃ
-    public void bossAIxiaohui()  // ¹ÖÎïÏûÊ§
-    {
-    
-        Destroy(gameObject);  // Ïú»Ù¹ÖÎï¶ÔÏó
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.tag == "Player")  // Èç¹ûÓëÖ÷½ÇÅö×²
-        {
-         // Ö÷½ÇµôÑª
-            
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.tag == "Player")  // Èç¹ûÓëÖ÷½Ç½áÊøÅö×²
-        {
-            // ...
-        }
+        HP -= damage;
     }
 }

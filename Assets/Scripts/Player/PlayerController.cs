@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public Transform playerObject; // The capsule representing the player
     //public Rigidbody rb; // The rigidbody attached to the capsule
     public TrailRenderer tr; // The trail renderer attached to the capsule
+    public Rigidbody rb;
 
     [Header("Stats")]
     public float health = 100f; // Player health
@@ -53,6 +54,11 @@ public class PlayerController : MonoBehaviour
         // Reset rotation because unity sucks?
         //rb.centerOfMass = Vector3.zero;
         //rb.inertiaTensorRotation = Quaternion.identity;
+    }
+
+    void FixedUpdate()
+    {
+        rb.velocity = dir * speedMultiplier * Time.fixedDeltaTime * 50;
     }
 
     void Update()
@@ -167,14 +173,23 @@ public class PlayerController : MonoBehaviour
         dir.z = Input.GetAxis("Vertical");
         dir.Normalize();
 
-        playerObject.transform.position += speedMultiplier * Time.deltaTime * dir;
-    
+        //rb.position += dir * speedMultiplier * Time.fixedDeltaTime;
+        //rb.AddForce(dir);
+
+        //rb.MovePosition(rb.position + dir);
+
+
+        //playerObject.transform.Translate(speedMultiplier * Time.deltaTime * dir);
+        //playerObject.transform.Translate(speedMultiplier * Time.deltaTime * dir.z);
+        
         // Won't be zero if the player has moved
-        if(dir != Vector3.zero)
+        /*if(dir != Vector3.zero)
         {
             // Rotate the player such that the forward direction of the player is the direction of travel
-            playerObject.transform.forward = dir;
-        }
+            playerObject.transform.LookAt(dir);
+        }*/
+
+        //playerObject.transform.Translate(playerObject.transform.forward * speedMultiplier * Time.deltaTime * dir);
     }
 
     //-------------------------------------------------------------------------------------

@@ -8,6 +8,8 @@ TagManager:
   - zhuazi
   - NPC
   - enemy
+  - Monster
+  - bullet
   layers:
   - Default
   - TransparentFX

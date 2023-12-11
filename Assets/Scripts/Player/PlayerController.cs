@@ -57,10 +57,15 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        /*if (DialogueManager.GetInstance().dialogueIsPlaying)
+
+        //Freezing player movement for dialogue
+        
+        if (DialogueManager.GetInstance().dialogueIsPlaying)
         {
             return;
-        }*/
+        }
+        
+        
         Move();
 
         // Player blinks

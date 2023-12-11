@@ -78,6 +78,6 @@ public class PlayerShoot : MonoBehaviour
         GameObject bulletObj = Instantiate(bullet, hands.transform.position, hands.transform.rotation);
 
         Vector3 shootDir = (cursor.transform.position - hands.transform.position).normalized;
-        bulletObj.transform.GetComponent<Bullet>().InitBullet(shootDir, bulletSpeed);
+        bulletObj.transform.GetComponent<Bullet>().InitBullet(shootDir, "player", bulletSpeed);
     }
 }

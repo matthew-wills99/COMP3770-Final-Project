@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -7,18 +8,26 @@ public class Bullet : MonoBehaviour
     private Vector3 shootDir;
     
     private float speed;
-    private float radius;
-    public void InitBullet(Vector3 shootDir, float speed=10f, float lifespan=10f)
+    private string sender;
+    public void InitBullet(Vector3 shootDir, string sender, float speed=10f, float lifespan=10f)
     {
-        this.radius = transform.localScale.x;
         this.shootDir = shootDir;
         this.speed = speed;
+        this.sender = sender;
         Destroy(gameObject, lifespan);
     }
 
-    void OnTriggerEnter2D()
+    public void OnTriggerEnter(Collider other)
     {
-        
+        if(other.tag == "enemy" && sender != "enemy")
+        {
+            other.GetComponentInParent<TurretController>().Hit();
+        }
+
+        if(other.tag == "Player" && sender != "Player")
+        {
+            other.GetComponentInParent<PlayerController>().Hit();
+        }
     }
     
     void MoveBullet()

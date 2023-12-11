@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Stats")]
     public float health = 100f; // Player health
+    public float healthDecrement = 5f; // How much health the player loses each hit
 
     [Header("Movement")]
     public float speedMultiplier = 25f; // Adjust the speed of the player, 25 works well
@@ -22,6 +23,10 @@ public class PlayerController : MonoBehaviour
     public float blinkDistance = 5f; // Adjust how far the player blinks
     public float blinkCooldown = 5f; // Adjust the cooldown of the blink ability in seconds
     private bool canBlink = true; // Keep track of if the player can blink or not
+
+    [Header("Attacking")]
+    public float attackCooldown = 0.1f; // Adjust how long the player must wait before shooting or attacking again
+    private bool canAttack = true; // Keep track of if the player can attack or not
 
     //private bool canAttack = true; // Not yet used
 
@@ -71,18 +76,20 @@ public class PlayerController : MonoBehaviour
         }
 
         // Player shoots
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && canAttack)
         {
-            // Start shoot event if it exists
-            if(onShoot != null)
-            {
-                onShoot();
-            }
-            else
-            {
-                Debug.Log("Failed to invoke event");
-            }
+            StartCoroutine(Shoot());
         }
+    }
+
+    /// <summary>
+    /// Called when the player is hit by a bullet
+    /// see Bullet.cs
+    /// </summary>
+    public void Hit()
+    {
+        health -= healthDecrement;
+        Debug.Log("hit player " + health.ToString());
     }
 
     /// <summary>
@@ -122,6 +129,27 @@ public class PlayerController : MonoBehaviour
 
         canBlink = true;
         Debug.Log("Blink ready.");
+    }
+
+    private IEnumerator Shoot()
+    {
+        canAttack = false;
+        Debug.Log("Shoot");
+
+        // Start shoot event if it exists
+        if(onShoot != null)
+        {
+            onShoot();
+        }
+        else
+        {
+            Debug.Log("Failed to invoke event");
+        }
+
+        yield return new WaitForSeconds(attackCooldown);
+
+        canAttack = true;
+        Debug.Log("Shoot ready");
     }
 
     /// <summary>

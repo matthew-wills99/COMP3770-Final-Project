@@ -12,6 +12,8 @@ public class TurretController : MonoBehaviour
     [Header("Settings")]
     public float shootCooldown = 1f;
     public float bulletSpeed = 10f;
+    public float health = 100f;
+    public float healthDecrement = 5f;
 
     private bool canShoot = true;
 
@@ -22,6 +24,17 @@ public class TurretController : MonoBehaviour
             StartCoroutine(Shoot());
         }
         transform.LookAt(playerController.GetPlayerTransform().position);
+
+        if(health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void Hit()
+    {
+        health -= healthDecrement;
+        Debug.Log("hit enemy: " + health.ToString());
     }
 
     private IEnumerator Shoot()
@@ -31,7 +44,7 @@ public class TurretController : MonoBehaviour
         GameObject bulletObj = Instantiate(bullet, barrel.transform.position, transform.rotation);
 
         Vector3 shootDir = (playerController.GetPlayerTransform().transform.position - barrel.transform.position).normalized;
-        bulletObj.transform.GetComponent<Bullet>().InitBullet(shootDir, bulletSpeed);
+        bulletObj.transform.GetComponent<Bullet>().InitBullet(shootDir, "enemy", bulletSpeed);
 
         yield return new WaitForSeconds(shootCooldown);
 

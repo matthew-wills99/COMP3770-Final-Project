@@ -109,8 +109,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5908380445813830014}
+  - {fileID: 5908380446440189661}
   m_Father: {fileID: 5908380446105154092}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5908380446105154088
 GameObject:
@@ -144,7 +145,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 941621256477660211}
-  - {fileID: 5908380446440189661}
   - {fileID: 5908380445938205700}
   m_Father: {fileID: 5908380446446747269}
   m_RootOrder: 0
@@ -344,11 +344,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5908380446440189662}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 5908380446105154092}
+  m_Father: {fileID: 5908380445938205700}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5908380446440189666
@@ -448,10 +448,13 @@ MonoBehaviour:
   blinkLocation: {fileID: 5908380446440189661}
   playerObject: {fileID: 5908380446105154092}
   tr: {fileID: 5908380446105154099}
+  rb: {fileID: 0}
   health: 100
+  healthDecrement: 5
   speedMultiplier: 25
   blinkDistance: 5
   blinkCooldown: 5
+  attackCooldown: 0.1
   handsDistance: 1
 --- !u!114 &1073246414366196012
 MonoBehaviour:

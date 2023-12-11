@@ -56,7 +56,7 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (currentStory.currentChoices.Count == 0 && Input.GetKeyDown(KeyCode.Space))
         {
             ContinueStory();
         }
@@ -82,12 +82,14 @@ public class DialogueManager : MonoBehaviour
     {
         if (currentStory.canContinue)
         {
+            Debug.Log("can continue");
             dialogueText.text = currentStory.Continue();
 
             DisplayChoices();
         }
         else
         {
+            Debug.Log("cannot continue");
             ExitDialogueMode();
         }
     }
@@ -95,6 +97,7 @@ public class DialogueManager : MonoBehaviour
     public void MakeChoice(int choiceIndex)
     {
         currentStory.ChooseChoiceIndex(choiceIndex);
+        ContinueStory();  
     }
 
     private void DisplayChoices()

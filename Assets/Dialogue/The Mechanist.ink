@@ -1,7 +1,8 @@
 -> main
 
 === main ===
-This corner of the lab is mine, you don't belong here.
+This corner of The Lab is mine, you don't belong here.
+Give me one reason I shouldn't kick you out now.
     * [I want to help]
         -> helping
         ->DONE

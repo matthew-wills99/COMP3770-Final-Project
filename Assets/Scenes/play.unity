@@ -1623,12 +1623,6 @@ RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
-=======
-  m_CorrespondingSourceObject: {fileID: 1078193998747977926, guid: 6a5d989dfad83c8408b69000d91661bc, type: 3}
-  m_PrefabInstance: {fileID: 1078193999639209588}
-
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1630691048 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1078193998008531100, guid: 6a5d989dfad83c8408b69000d91661bc, type: 3}
   m_PrefabInstance: {fileID: 1078193999639209588}

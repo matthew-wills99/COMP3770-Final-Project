@@ -6,13 +6,13 @@ using UnityEngine.AI;
 public class Monster : MonoBehaviour
 {
     public float HP = 20;
-    NavMeshAgent agent;
+    //NavMeshAgent agent;
     Animator ani;
     float juli;
     public Transform player;
     void Start()
     {
-        agent= GetComponent<NavMeshAgent>();
+        //agent= GetComponent<NavMeshAgent>();
         ani= GetComponent<Animator>();
     }
 
@@ -22,7 +22,7 @@ public class Monster : MonoBehaviour
     {
         if (HP<=0)//血量0时，播放死亡动画
         {
-            agent.enabled = false;
+            //agent.enabled = false;
             ani.SetBool("Die", true);
         }
 
@@ -30,14 +30,14 @@ public class Monster : MonoBehaviour
         // 一定位置内跟随过去
         if (Vector3.Distance(transform.position, player.position) >= 2.5f && Vector3.Distance(transform.position, player.position) <= 10f)
         {
-            agent.enabled = true;
-            agent.destination = player.position;
+            /*agent.enabled = true;
+            agent.destination = player.position;*/
             ani.SetBool("Run", true);
         }
         else//超过范围 停止跟随，并播放待机动画
         {
             transform.LookAt(player.position);  
-            agent.enabled = false;
+            //agent.enabled = false;
             ani.SetBool("Run", false);
         }
         //靠近目标时，停止导航，播放攻击动画
